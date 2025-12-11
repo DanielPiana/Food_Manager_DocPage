@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the showCreateRecipeDialog method from the RecipesViewState class, for the Dart programming language.">
+  <title>showCreateRecipeDialog method - RecipesViewState class - recipes_view library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="../../" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">food_manager</a></li>
+    <li><a href="../../View_recipes_view/">View\recipes_view.dart</a></li>
+    <li><a href="../../View_recipes_view/RecipesViewState-class.html">RecipesViewState</a></li>
+    <li class="self-crumb">showCreateRecipeDialog method</li>
+  </ol>
+  <div class="self-name">showCreateRecipeDialog</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <button class="toggle" id="theme-button" title="Toggle between light and dark mode" aria-label="Light and dark mode toggle">
+    <span id="dark-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      dark_mode
+    </span>
+    <span id="light-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      light_mode
+    </span>
+  </button>
+</header>
+<main>
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="View_recipes_view&#47;RecipesViewState-class-sidebar.html"
+    data-below-sidebar="">
+    <div>
+<h1><span class="kind-method">showCreateRecipeDialog</span> method 
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
+<span class="name ">showCreateRecipeDialog</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="showCreateRecipeDialog-param-context"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/BuildContext-class.html">BuildContext</a></span> <span class="parameter-name">context</span>, </span></li>
+<li><span class="parameter" id="showCreateRecipeDialog-param-currentRecipeIndex"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">currentRecipeIndex</span></span></li>
+</ol>)
+
+      
+
+    </section>
+    
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">Future&lt;void&gt; showCreateRecipeDialog(BuildContext context, int currentRecipeIndex) async {
+  final isMobile = !kIsWeb &amp;&amp; (Platform.isAndroid || Platform.isIOS);
+  final isDesktop = !kIsWeb &amp;&amp; (Platform.isWindows || Platform.isLinux || Platform.isMacOS);
+
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  File? selectedImage;
+  String? selectedTime;
+
+  bool nameValid = false;
+  bool descriptionValid = false;
+  bool timeValid = false;
+
+  bool nameTouched = false;
+  bool descriptionTouched = false;
+  bool timeTouched = false;
+
+  List&lt;String&gt; times(BuildContext context) =&gt; [
+        AppLocalizations.of(context)!.lessThan15,
+        AppLocalizations.of(context)!.lessThan30,
+        AppLocalizations.of(context)!.lessThan45,
+        AppLocalizations.of(context)!.lessThan1h,
+        AppLocalizations.of(context)!.lessThan1h30,
+        AppLocalizations.of(context)!.lessThan2h,
+        AppLocalizations.of(context)!.moreThan2h,
+      ];
+
+  await showDialog(
+    context: context,
+    builder: (dialogContext) {
+      return StatefulBuilder(
+        builder: (context, setState) =&gt; AlertDialog(
+          title: Text(AppLocalizations.of(context)!.new_recipe),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextField(
+                  controller: nameController,
+                  decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context)!.name,
+                    suffixIcon: nameTouched
+                        ? (nameValid
+                            ? const Icon(Icons.check_circle,
+                                color: Colors.green)
+                            : const Icon(Icons.cancel, color: Colors.red))
+                        : null,
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      nameTouched = true;
+                      nameValid = value.trim().isNotEmpty;
+                    });
+                  },
+                ),
+                if (nameTouched &amp;&amp; !nameValid)
+                  Text(
+                    AppLocalizations.of(context)!.name_error_message,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: descriptionController,
+                  decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context)!.description,
+                    suffixIcon: descriptionTouched
+                        ? (descriptionValid
+                            ? const Icon(Icons.check_circle,
+                                color: Colors.green)
+                            : const Icon(Icons.cancel, color: Colors.red))
+                        : null,
+                  ),
+                  maxLines: 3,
+                  onChanged: (value) {
+                    setState(() {
+                      descriptionTouched = true;
+                      descriptionValid = value.trim().isNotEmpty;
+                    });
+                  },
+                ),
+                if (descriptionTouched &amp;&amp; !descriptionValid)
+                  Text(
+                    AppLocalizations.of(context)!.description_error_message,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                const SizedBox(height: 16),
+                DropdownButtonFormField&lt;String&gt;(
+                  isExpanded: true,
+                  value: selectedTime,
+                  decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context)!.estimated_time,
+                    suffixIcon: timeTouched
+                        ? (timeValid
+                            ? const Icon(Icons.check_circle,
+                                color: Colors.green)
+                            : const Icon(Icons.cancel, color: Colors.red))
+                        : null,
+                  ),
+                  items: times(context).map((time) {
+                    return DropdownMenuItem(
+                      value: time,
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 8),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                                color: Colors.grey.shade400, width: 0.8),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Text(time,
+                              style: const TextStyle(fontSize: 16)),
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                  selectedItemBuilder: (context) {
+                    return times(context).map((s) {
+                      return Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(s, style: const TextStyle(fontSize: 16)),
+                      );
+                    }).toList();
+                  },
+                  onChanged: (value) {
+                    setState(() {
+                      timeTouched = true;
+                      selectedTime = value;
+                      timeValid = value != null &amp;&amp; value.trim().isNotEmpty;
+                    });
+                  },
+                ),
+                if (timeTouched &amp;&amp; !timeValid)
+                  Text(
+                    AppLocalizations.of(context)!.time_error_message,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                const SizedBox(height: 16),
+                &#47;&#47; Cambiar esta sección en el diálogo:
+
+                const SizedBox(height: 16),
+
+                Center(
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          &#47;&#47; BOTÓN GALERÍA
+                          Material(
+                            elevation: 2,
+                            borderRadius: BorderRadius.circular(10),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: Colors.grey[700]!, width: 0.8),
+                              ),
+                              child: IconButton(
+                                icon: const Icon(Icons.photo_library, color: Colors.green, size: 28),
+                                tooltip: AppLocalizations.of(context)!.select_photo,
+                                onPressed: () async {
+                                  final file = await ImagePickerHelper.imageFromGallery();
+                                  if (file != null) {
+                                    setState(() {
+                                      selectedImage = file;
+                                    });
+                                  }
+                                },
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          &#47;&#47; BOTÓN CÁMARA&#47;CLIPBOARD
+                          Material(
+                            elevation: 2,
+                            borderRadius: BorderRadius.circular(10),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: Colors.grey[700]!, width: 0.8),
+                              ),
+                              child: IconButton(
+                                icon: const Icon(Icons.camera_alt, color: Colors.green, size: 28),
+                                tooltip: isMobile
+                                    ? AppLocalizations.of(context)!.open_camera
+                                    : AppLocalizations.of(context)!.paste_image_from_clipboard,
+                                onPressed: () async {
+                                  final file = await ImagePickerHelper.imageFromClipboard();
+                                  if (file != null) {
+                                    setState(() {
+                                      selectedImage = file;
+                                    });
+                                  }
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+
+                      &#47;&#47; ========== PREVIEW DE IMAGEN ==========
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: SizedBox(
+                          height: 180,
+                          width: double.infinity,
+                          child: selectedImage != null
+                              ? Image.file(
+                            selectedImage!,
+                            fit: BoxFit.contain,
+                          )
+                              : Container(
+                            color: Colors.grey[300],
+                            child: const Center(
+                              child: Icon(
+                                Icons.image_outlined,
+                                size: 60,
+                                color: Colors.white70,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            ElevatedButton(
+              child: Text(AppLocalizations.of(context)!.cancel),
+              onPressed: () =&gt; Navigator.pop(dialogContext),
+            ),
+            ElevatedButton(
+              child: Text(AppLocalizations.of(context)!.save),
+              onPressed: () async {
+                setState(() {
+                  nameTouched = true;
+                  descriptionTouched = true;
+                  timeTouched = true;
+
+                  nameValid = nameController.text.trim().isNotEmpty;
+                  descriptionValid =
+                      descriptionController.text.trim().isNotEmpty;
+                  timeValid =
+                      selectedTime != null &amp;&amp; selectedTime!.trim().isNotEmpty;
+                });
+
+                if (!nameValid || !descriptionValid || !timeValid) {
+                  return;
+                }
+
+                final name = capitalize(nameController.text.trim());
+                final description =
+                    capitalize(descriptionController.text.trim());
+                final userUuid = context.read&lt;UserProvider&gt;().uuid;
+
+                if (name.isEmpty || userUuid == null) return;
+
+                showDialog(
+                  context: dialogContext,
+                  barrierDismissible: false,
+                  builder: (_) =&gt; const Center(child: CircularProgressIndicator()),
+                );
+
+                try {
+                  String? imageUrl;
+
+                  if (selectedImage != null) {
+                    final bytes = await selectedImage!.readAsBytes();
+                    final fileName = &#39;${normalizeImageName(name)}_${Random().nextInt(9999).toString().padLeft(4, &#39;0&#39;)}&#39;;
+
+                    final path = &#39;recetas&#47;$userUuid&#47;$fileName.jpg&#39;;
+
+                    await Supabase.instance.client.storage
+                        .from(&#39;fotos&#39;)
+                        .uploadBinary(path, bytes,
+                            fileOptions:
+                                const FileOptions(contentType: &#39;image&#47;jpeg&#39;));
+
+                    imageUrl = Supabase.instance.client.storage
+                        .from(&#39;fotos&#39;)
+                        .getPublicUrl(path);
+                  }
+
+                  final newRecipe = RecipeModel(
+                    name: name,
+                    description: description,
+                    userUuid: userUuid,
+                    photo: imageUrl ?? &#39;&#39;,
+                    time: selectedTime ?? &#39;&#39;,
+                    shareCode: _generateShareCode(),
+                  );
+
+                  await context.read&lt;RecipeProvider&gt;().createRecipe(newRecipe);
+
+                  Navigator.pop(dialogContext);
+
+                  Navigator.pop(dialogContext);
+
+                  showAwesomeSnackBar(
+                    context,
+                    title: AppLocalizations.of(context)!.success,
+                    message: AppLocalizations.of(context)!.recipe_created_ok,
+                    contentType: asc.ContentType.success,
+                  );
+                } catch (e) {
+                  Navigator.pop(dialogContext);
+
+                  Navigator.pop(dialogContext);
+
+                  showAwesomeSnackBar(
+                    context,
+                    title: AppLocalizations.of(context)!.error,
+                    message:
+                        AppLocalizations.of(context)!.recipe_created_error,
+                    contentType: asc.ContentType.failure,
+                  );
+                }
+              },
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../../index.html">food_manager</a></li>
+    <li><a href="../../View_recipes_view/">recipes_view</a></li>
+    <li><a href="../../View_recipes_view/RecipesViewState-class.html">RecipesViewState</a></li>
+    <li class="self-crumb">showCreateRecipeDialog method</li>
+</ol>
+
+    <h5>RecipesViewState class</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div><!--/.sidebar-offcanvas-->
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+</div><!--/.sidebar-offcanvas-->
+</main>
+<footer>
+  <span class="no-break">
+    food_manager
+      0.1.0
+  </span>
+  
+</footer>
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+

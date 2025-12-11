@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the updateLocalProduct method from the ShoppingListProvider class, for the Dart programming language.">
+  <title>updateLocalProduct method - ShoppingListProvider class - shopping_list_provider library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="../../" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">food_manager</a></li>
+    <li><a href="../../Providers_shopping_list_provider/">Providers\shopping_list_provider.dart</a></li>
+    <li><a href="../../Providers_shopping_list_provider/ShoppingListProvider-class.html">ShoppingListProvider</a></li>
+    <li class="self-crumb">updateLocalProduct method</li>
+  </ol>
+  <div class="self-name">updateLocalProduct</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <button class="toggle" id="theme-button" title="Toggle between light and dark mode" aria-label="Light and dark mode toggle">
+    <span id="dark-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      dark_mode
+    </span>
+    <span id="light-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      light_mode
+    </span>
+  </button>
+</header>
+<main>
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="Providers_shopping_list_provider&#47;ShoppingListProvider-class-sidebar.html"
+    data-below-sidebar="">
+    <div>
+<h1><span class="kind-method">updateLocalProduct</span> method 
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+<span class="returntype">void</span>
+<span class="name ">updateLocalProduct</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="updateLocalProduct-param-updatedProduct"><span class="type-annotation"><a href="../../models_product_model/ProductModel-class.html">ProductModel</a></span> <span class="parameter-name">updatedProduct</span></span></li>
+</ol>)
+
+      
+
+    </section>
+    
+<section class="desc markdown">
+  <p>Actualiza la información de un producto en la lista local de compras.</p>
+<p>Flujo principal:</p>
+<ul>
+<li>Busca en la lista principal <code>_shoppingList</code> el producto cuyo <code>productId</code> coincida
+con el del <code>updatedProduct</code>.</li>
+<li>Si no existe, termina sin hacer nada.</li>
+<li>Si existe:
+<ul>
+<li>Crea una nueva instancia de <a href="../../models_shopping_list_model/ShoppingListModel-class.html">ShoppingListModel</a> con los datos actualizados
+(nombre, precio, supermercado), manteniendo la cantidad y marcado previos.</li>
+<li>Reemplaza el producto en la lista principal <code>_shoppingList</code>.</li>
+<li>Elimina la versión anterior de <a href="../../Providers_shopping_list_provider/ShoppingListProvider/groupedShopping.html">groupedShopping</a>.</li>
+<li>Si el supermercado antiguo queda vacío, elimina su clave del mapa.</li>
+<li>Inserta el producto actualizado en la lista agrupada correspondiente a su nuevo supermercado.</li>
+<li>Ordena las compras mediante <a href="../../Providers_shopping_list_provider/ShoppingListProvider/sortShoppingList.html">sortShoppingList</a>.</li>
+</ul>
+</li>
+<li>Finalmente, notifica a los listeners para refrescar la interfaz.</li>
+</ul>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">void updateLocalProduct(ProductModel updatedProduct) {
+  final index =
+  _shoppingList.indexWhere((c) =&gt; c.productId == updatedProduct.id);
+  if (index == -1) return;
+
+  final existingShopping = _shoppingList[index];
+
+  final updatedShopping = ShoppingListModel(
+    productId: existingShopping.productId,
+    quantity: existingShopping.quantity,
+    marked: existingShopping.marked,
+    userUuid: existingShopping.userUuid,
+    supermarket: updatedProduct.supermarket,
+    name: updatedProduct.name,
+    price: updatedProduct.price,
+  );
+
+  _shoppingList[index] = updatedShopping;
+
+  groupedShopping[existingShopping.supermarket]
+      ?.removeWhere((c) =&gt; c.productId == existingShopping.productId);
+
+  if (groupedShopping[existingShopping.supermarket]?.isEmpty ?? false) {
+    groupedShopping.remove(existingShopping.supermarket);
+  }
+
+  groupedShopping.putIfAbsent(updatedShopping.supermarket, () =&gt; []);
+  groupedShopping[updatedShopping.supermarket]!.add(updatedShopping);
+
+  sortShoppingList(shoppingList);
+
+  notifyListeners();
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../../index.html">food_manager</a></li>
+    <li><a href="../../Providers_shopping_list_provider/">shopping_list_provider</a></li>
+    <li><a href="../../Providers_shopping_list_provider/ShoppingListProvider-class.html">ShoppingListProvider</a></li>
+    <li class="self-crumb">updateLocalProduct method</li>
+</ol>
+
+    <h5>ShoppingListProvider class</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div><!--/.sidebar-offcanvas-->
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+</div><!--/.sidebar-offcanvas-->
+</main>
+<footer>
+  <span class="no-break">
+    food_manager
+      0.1.0
+  </span>
+  
+</footer>
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+

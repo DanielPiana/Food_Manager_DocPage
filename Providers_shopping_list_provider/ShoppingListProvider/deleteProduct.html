@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the deleteProduct method from the ShoppingListProvider class, for the Dart programming language.">
+  <title>deleteProduct method - ShoppingListProvider class - shopping_list_provider library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="../../" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">food_manager</a></li>
+    <li><a href="../../Providers_shopping_list_provider/">Providers\shopping_list_provider.dart</a></li>
+    <li><a href="../../Providers_shopping_list_provider/ShoppingListProvider-class.html">ShoppingListProvider</a></li>
+    <li class="self-crumb">deleteProduct method</li>
+  </ol>
+  <div class="self-name">deleteProduct</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <button class="toggle" id="theme-button" title="Toggle between light and dark mode" aria-label="Light and dark mode toggle">
+    <span id="dark-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      dark_mode
+    </span>
+    <span id="light-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      light_mode
+    </span>
+  </button>
+</header>
+<main>
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="Providers_shopping_list_provider&#47;ShoppingListProvider-class-sidebar.html"
+    data-below-sidebar="">
+    <div>
+<h1><span class="kind-method">deleteProduct</span> method 
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
+<span class="name ">deleteProduct</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="deleteProduct-param-productId"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">productId</span></span></li>
+</ol>)
+
+      
+
+    </section>
+    
+<section class="desc markdown">
+  <p>Elimina un producto de la compra en la base de datos y actualiza el estado local.</p>
+<p>Flujo principal:</p>
+<ul>
+<li>Busca el producto en la lista local de <code>_shoppingList</code> a partir de su <code>productId</code>.</li>
+<li>Aplica una eliminación optimista mediante <a href="../../Providers_shopping_list_provider/ShoppingListProvider/deleteLocalProduct.html">deleteLocalProduct</a>,
+quitando el producto de la lista local antes de confirmar con la base de datos.</li>
+<li>Intenta eliminar el registro en la tabla <code>compra</code> de la base de datos,
+filtrando por <code>idproducto</code> y <a href="../../Providers_shopping_list_provider/ShoppingListProvider/userId.html">userId</a>.</li>
+<li>Si la operación en la base de datos falla:
+<ul>
+<li>Restaura el producto eliminado en la lista local con <a href="../../Providers_shopping_list_provider/ShoppingListProvider/addLocalProduct.html">addLocalProduct</a>.</li>
+<li>Muestra un log del error y relanza la excepción para que el llamador la maneje.</li>
+</ul>
+</li>
+</ul>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">Future&lt;void&gt; deleteProduct(int productId) async {
+  final deletedProduct = _shoppingList.firstWhere((p) =&gt; p.productId == productId);
+
+  deleteLocalProduct(productId); &#47;&#47; optimistic update
+
+  try {
+    await database
+        .from(&#39;compra&#39;)
+        .delete()
+        .eq(&#39;idproducto&#39;, productId)
+        .eq(&#39;usuariouuid&#39;, userId!);
+  } catch (e) {
+    addLocalProduct(deletedProduct);
+    debugPrint(&quot;Error al eliminar producto: $e&quot;);
+    rethrow;
+  }
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../../index.html">food_manager</a></li>
+    <li><a href="../../Providers_shopping_list_provider/">shopping_list_provider</a></li>
+    <li><a href="../../Providers_shopping_list_provider/ShoppingListProvider-class.html">ShoppingListProvider</a></li>
+    <li class="self-crumb">deleteProduct method</li>
+</ol>
+
+    <h5>ShoppingListProvider class</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div><!--/.sidebar-offcanvas-->
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+</div><!--/.sidebar-offcanvas-->
+</main>
+<footer>
+  <span class="no-break">
+    food_manager
+      0.1.0
+  </span>
+  
+</footer>
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+
